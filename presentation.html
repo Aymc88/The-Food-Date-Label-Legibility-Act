@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=720, initial-scale=1.0">
+<title>When's Lunch? — Food Date Label Legibility Act</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --ca-blue: #003A70;
+    --ca-gold: #B8860B;
+    --text-light: #F8F6F0;
+    --text-dark: #1A1A2E;
+    --accent-red: #C41E3A;
+    --slide-bg: #F8F6F0;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F8F6F0;
+  }
+
+  .slides { position: relative; width: 100%; height: 100%; }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s;
+    overflow: hidden;
+  }
+  .slide.active { opacity: 1; visibility: visible; }
+
+  .slide-image-bg {
+    position: absolute; inset: 0;
+    background-size: contain; background-position: center;
+    background-repeat: no-repeat;
+    background-color: #F0EDE6;
+    transition: opacity 0.5s ease;
+  }
+  .slide-image-bg.is-copy {
+    opacity: 0;
+  }
+  .slide.show-copy .slide-image-bg.is-original {
+    opacity: 0;
+  }
+  .slide.show-copy .slide-image-bg.is-copy {
+    opacity: 1;
+  }
+  .slide-image .overlay,
+  .slide > .overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 0.8rem 4rem 0.8rem;
+    background: linear-gradient(transparent 0%, rgba(255,255,255,0.92) 60%);
+  }
+  .slide-image .overlay h2,
+  .slide > .overlay h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.6rem; font-weight: 700;
+    color: #1A1A2E;
+    line-height: 1.3;
+    text-shadow: 0 1px 4px rgba(255,255,255,0.3);
+  }
+  .slide-image .overlay [data-reveal],
+  .slide > .overlay [data-reveal] {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .slide-image .overlay [data-reveal].visible,
+  .slide > .overlay [data-reveal].visible {
+    opacity: 1;
+  }
+  .slide-image .overlay .tag,
+  .slide > .overlay .tag,
+  .slide-text .tag {
+    display: inline-block;
+    font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 0.35rem 0.9rem;
+    border-radius: 4px;
+    margin-bottom: 0.3rem;
+    background: var(--ca-gold);
+    color: #fff;
+  }
+
+  .slide-text {
+    background: var(--slide-bg);
+    padding: 4rem;
+    text-align: center;
+  }
+  .slide-text .inner {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .slide-text .badge {
+    display: inline-block;
+    font-size: 0.7rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    padding: 0.4rem 1rem;
+    border: 1px solid rgba(0,0,0,0.15);
+  }
+  .slide-text .badge.gold {
+    color: var(--ca-gold);
+    border-color: var(--ca-gold);
+    background: transparent;
+  }
+  .slide-text h1 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 4rem; font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+  .slide-text h1 .highlight { color: var(--ca-gold); }
+  .slide-text h2 {
+    font-family: 'Source Serif 4', serif;
+    font-size: 2.8rem; font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  .slide-text h3 {
+    font-size: 1.6rem; font-weight: 600;
+    color: var(--ca-gold);
+    margin-bottom: 0.75rem;
+  }
+  .slide-text p {
+    font-size: 1.3rem;
+    color: rgba(30,30,50,0.85);
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .slide-text p.lead {
+    font-size: 1.6rem;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+  .slide-text p.small { font-size: 1rem; color: rgba(30,30,50,0.6); }
+
+  .requirements { display: flex; gap: 2rem; margin-top: 2.5rem; text-align: left; }
+  .req-card {
+    flex: 1;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 1.8rem 1.5rem;
+  }
+  .req-card .num {
+    font-size: 2rem; font-weight: 800;
+    color: var(--ca-gold);
+    margin-bottom: 0.5rem;
+  }
+  .req-card h4 {
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+  .req-card p {
+    font-size: 0.85rem; color: rgba(30,30,50,0.7);
+    line-height: 1.5;
+  }
+
+  .stats-grid { display: flex; gap: 2rem; margin-top: 2rem; justify-content: center; }
+  .stat-card {
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    min-width: 180px;
+    text-align: center;
+  }
+  .stat-card .number {
+    font-size: 3.5rem; font-weight: 800;
+    color: var(--accent-red);
+    line-height: 1;
+  }
+  .stat-card .number.gold { color: var(--ca-gold); }
+  .stat-card .label {
+    font-size: 0.85rem; color: rgba(30,30,50,0.65);
+    margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+
+  .nav-arrows {
+    position: fixed; z-index: 100;
+    bottom: 2rem; right: 2rem;
+    display: flex; gap: 0.5rem;
+  }
+  .nav-btn {
+    background: rgba(0,0,0,0.5);
+    border: none;
+    color: #fff;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .nav-btn:hover { background: rgba(0,0,0,0.75); }
+  .nav-btn:disabled { opacity: 0.2; cursor: default; }
+
+
+  .progress-dots {
+    position: fixed; right: 1.25rem; top: 50%;
+    transform: translateY(-50%);
+    z-index: 90;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .progress-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.15);
+    border: none; cursor: pointer;
+    transition: all 0.3s;
+    padding: 0;
+  }
+  .progress-dot.active { background: var(--ca-gold); transform: scale(1.4); }
+  .progress-dot:hover { background: rgba(255,255,255,0.5); }
+
+  @media (max-width: 900px) {
+    .slide-text h1 { font-size: 2.5rem; }
+    .slide-text h2 { font-size: 1.8rem; }
+    .slide-text p { font-size: 1rem; }
+    .requirements { flex-direction: column; }
+    .stats-grid { flex-wrap: wrap; }
+    .slide-image .overlay,
+    .slide > .overlay { padding: 1.5rem; }
+    .slide-image .overlay h2,
+    .slide > .overlay h2 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slides">
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide slide-text active" data-notes-index="0">
+  <div class="inner">
+    <div class="badge gold">Proposed Legislation</div>
+    <h1>The Food Date Label<br>Legibility Act</h1>
+    <p class="lead" style="margin-bottom: 2rem; font-size: 1.2rem; color: var(--ca-gold); font-weight: 600; letter-spacing: 0.04em;">
+      By Amanda Chen
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 2: EXPERIMENT SETUP -->
+<div class="slide slide-text" data-notes-index="1">
+  <div class="inner">
+    <div class="badge gold">The Experiment</div>
+    <h2 style="font-size: 4rem; font-weight: 800; margin-bottom: 0.75rem; font-family: 'Source Serif 4', serif; line-height: 1.15;">When&rsquo;s Lunch</h2>
+    <p style="font-size: 1.5rem; color: rgba(30,30,50,0.6); font-style: italic;">
+      the unofficial sequel to &ldquo;What&rsquo;s for Lunch&rdquo;
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 3: TORTILLAS PACK 1 -->
+<div class="slide slide-image" data-notes-index="2">
+  <div class="slide-image-bg" style="background-image: url('page_1.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 1 &middot; Tortillas</span>
+    <h2 data-reveal>First pack — no date.</h2>
+  </div>
+</div>
+
+<!-- SLIDE 4: TORTILLAS PACK 2 -->
+<div class="slide slide-image" data-notes-index="3">
+  <div class="slide-image-bg is-original" style="background-image: url('page_2.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_2_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 1 &middot; Tortillas</span>
+    <h2 data-reveal>Second pack — <span style="font-size: 1.4rem; font-weight: 400;">The Overlapping Problem</span></h2>
+  </div>
+</div>
+
+<!-- SLIDE 5: PEANUT BUTTER -->
+<div class="slide slide-image" data-notes-index="4">
+  <div class="slide-image-bg is-original" style="background-image: url('page_3.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_3_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 2 &middot; Peanut Butter</span>
+    <h2 data-reveal>Creamy — <span style="font-size: 1.4rem; font-weight: 400;">The Low Contrast Problem</span></h2>
+  </div>
+</div>
+
+
+<!-- SLIDE 6: PEANUT BUTTER NATURAL -->
+<div class="slide slide-image" data-notes-index="5">
+  <div class="slide-image-bg is-original" style="background-image: url('page_4.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_4_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 2 &middot; Peanut Butter</span>
+    <h2 data-reveal>Natural — <span style="font-size: 1.4rem; font-weight: 400;">The Low Contrast Problem</span></h2>
+  </div>
+</div>
+
+<!-- SLIDE 7: PEANUT BUTTER CRUNCHY 1 -->
+<div class="slide slide-image" data-notes-index="6">
+  <div class="slide-image-bg is-original" style="background-image: url('page_5.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_5_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 2 &middot; Peanut Butter</span>
+    <h2 data-reveal>Crunchy #1 &mdash; <span style="font-size: 1.4rem; font-weight: 400;">The Low Contrast Problem</span></h2>
+  </div>
+</div>
+
+<!-- SLIDE 8: PEANUT BUTTER CRUNCHY 2 -->
+<div class="slide slide-image" data-notes-index="7">
+  <div class="slide-image-bg is-original" style="background-image: url('page_6.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_6_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 2 &middot; Peanut Butter</span>
+    <h2 data-reveal>Crunchy #2 &mdash; <span style="font-size: 1.4rem; font-weight: 400;">The Discrepancy Problem</span></h2>
+  </div>
+</div>
+<!-- SLIDE 9: CHIPS TITLE -->
+<div class="slide slide-text" data-notes-index="8">
+  <div class="inner">
+    <span class="tag" style="margin-bottom: 1rem;">Product 3 &middot; Chips</span>
+    <h2 style="font-size: 3.2rem;">Identify the date on the physical sample.</h2>
+  </div>
+</div>
+
+<!-- SLIDE 10: LEMONADE -->
+<div class="slide slide-image" data-notes-index="9">
+  <div class="slide-image-bg is-original" style="background-image: url('page_8.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_8_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 4 &middot; Lemonade</span>
+    <h2 data-reveal>Clear date embossment on clear plastic <span style="font-size: 1.4rem; font-weight: 400;">&mdash; Low Contrast Problem</span></h2>
+  </div>
+</div>
+
+<!-- SLIDE 11: ORANGE JUICE -->
+<div class="slide slide-image" data-notes-index="10">
+  <div class="slide-image-bg is-original" style="background-image: url('page_9.png');"></div>
+  <div class="slide-image-bg is-copy" style="background-image: url('page_9_copy.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Product 5 &middot; Orange Juice</span>
+    <h2 data-reveal>High contrast — <span style="font-size: 1.4rem; font-weight: 400;">The Exception</span></h2>
+  </div>
+</div>
+
+<!-- SLIDE 12: THE COUNT -->
+<div class="slide slide-text" data-notes-index="11">
+  <div class="inner">
+    <div class="badge gold">The Results</div>
+    <h2>What just happened?</h2>
+    <div class="stats-grid" style="justify-content: center;">
+      <div class="stat-card">
+        <div class="number">5</div>
+        <div class="label">of 9 items put back</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">2</div>
+        <div class="label">swaps for alternatives</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: FULL 25 -->
+<div class="slide slide-image" data-notes-index="12">
+  <div class="slide-image-bg" style="background-image: url('Full 25.png');"></div>
+  <div class="overlay">
+    <span class="tag" data-reveal>Photo Survey</span>
+    <h2 data-reveal>8 out of 25 illegible</h2>
+  </div>
+</div>
+
+<!-- SLIDE 14: THE HUMAN COST -->
+<div class="slide slide-text" data-notes-index="13">
+  <div class="inner">
+    <div class="badge gold">The Human Cost</div>
+    <h2>When you can&rsquo;t find or read the date,<br>you do one of two things:</h2>
+    <div style="display: flex; gap: 2rem; margin-top: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+      <div style="flex:1; background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.25); border-radius: 10px; padding: 1.5rem; text-align: center; display: flex; align-items: center; justify-content: center;">
+        <p style="font-size: 1.1rem; color: var(--text-dark); font-weight: 600;">Eat something you shouldn&rsquo;t</p>
+      </div>
+      <div style="flex:1; background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.25); border-radius: 10px; padding: 1.5rem; text-align: center; display: flex; align-items: center; justify-content: center;">
+        <p style="font-size: 1.1rem; color: var(--text-dark); font-weight: 600;">Throw out food that was perfectly fine</p>
+      </div>
+    </div>
+    <p style="margin-top: 2rem; font-size: 1.3rem; text-align: center;">
+      <strong>3 billion pounds</strong> of food &middot; <strong>$7 billion</strong></p>
+    <p style="font-size: 1.3rem; text-align: center;">
+      every single year.
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 15: THE GAP -->
+<div class="slide slide-text" data-notes-index="14">
+  <div class="inner">
+    <div class="badge gold">The Gap</div>
+    <h2>AB 660 fixed <em>what</em> to say.</h2>
+    <h2 style="color: var(--accent-red); font-size: 2.2rem; margin-top: -0.5rem;">It never said make it <em>readable</em>.</h2>
+    <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
+        <span style="color: rgba(30,30,50,0.7);">Nutrition Facts panel</span>
+        <span style="color: #2D7D46; font-weight: 600;">&check; Legible by law</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
+        <span style="color: rgba(30,30,50,0.7);">Net quantity statement</span>
+        <span style="color: #2D7D46; font-weight: 600;">&check; Distinct contrast required</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(196,30,58,0.06); padding: 0.75rem 1.25rem; border-radius: 6px; border: 1px solid rgba(196,30,58,0.2);">
+        <span style="color: var(--text-dark); font-weight: 600;">The date</span>
+        <span style="color: var(--accent-red); font-weight: 600;">&times; No standard at all</span>
+      </div>
+    </div>
+    <p style="margin-top: 1.5rem; font-size: 1.2rem; color: var(--ca-gold); font-weight: 600;">
+      The one piece of information that tells you if the food is still safe<br>
+      is the one thing with no legibility standard.
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 16: THE SOLUTION -->
+<div class="slide slide-text" data-notes-index="15">
+  <div class="inner">
+    <div class="badge gold">The Fix</div>
+    <h2 style="font-size: 2.2rem;">My bill adds one section to existing law.</h2>
+    <h3 style="margin-top: 1rem;">Three simple requirements.</h3>
+    <div class="requirements">
+      <div class="req-card">
+        <div class="num">01</div>
+        <h4>Contrast</h4>
+        <p>The date must stand out from its background. A <strong>4.5:1 contrast ratio</strong> &mdash; the same standard accessibility experts already use. Black text on white background passes automatically.</p>
+      </div>
+      <div class="req-card">
+        <div class="num">02</div>
+        <h4>Clear Field</h4>
+        <p>No other text, graphic, or logo overlapping the date. The date can&rsquo;t be buried under marketing or squeezed into a barcode corner.</p>
+      </div>
+      <div class="req-card">
+        <div class="num">03</div>
+        <h4>Forward-Looking</h4>
+        <p>Only applies to products made after <strong>July 2029</strong>. Two years of runway. No company has to throw away packaging they&rsquo;ve already printed.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 17: SAFE HARBOR -->
+<div class="slide slide-text" data-notes-index="16">
+  <div class="inner">
+    <div class="badge" style="border-color: var(--ca-gold); color: var(--ca-gold);">Safe Harbor, Not a Straitjacket</div>
+    <div style="display: flex; gap: 1.5rem; margin-top: 2rem; text-align: left;">
+      <div style="flex:1; background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); border-radius: 10px; padding: 1.5rem;">
+        <p style="font-size: 0.85rem; font-weight: 700; color: var(--ca-gold); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Question #1</p>
+        <p style="font-size: 0.95rem; color: rgba(30,30,50,0.85); line-height: 1.5; margin-bottom: 0.75rem;"><strong>Isn&rsquo;t a formatting rule too prescriptive?</strong></p>
+        <p style="font-size: 0.85rem; color: rgba(30,30,50,0.7); line-height: 1.5;">The 4.5:1 ratio is an optional safe harbor, not a mandate. A company can meet it or satisfy the flexible &ldquo;distinct contrast&rdquo; standard any other way.</p>
+      </div>
+      <div style="flex:1; background: rgba(184,134,11,0.08); border: 1px solid rgba(184,134,11,0.2); border-radius: 10px; padding: 1.5rem;">
+        <p style="font-size: 0.85rem; font-weight: 700; color: var(--ca-gold); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Question #2</p>
+        <p style="font-size: 0.95rem; color: rgba(30,30,50,0.85); line-height: 1.5; margin-bottom: 0.75rem;"><strong>Isn&rsquo;t WCAG a screen standard, not for packaging?</strong></p>
+        <p style="font-size: 0.85rem; color: rgba(30,30,50,0.7); line-height: 1.5;">The bill borrows only the ratio &mdash; the math of two colors. It lets the Department of Food and Agriculture set the measurement method for physical packages. Most big manufacturers already comply with similar rules in Europe and Canada.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18: PRECEDENT -->
+<div class="slide slide-text" data-notes-index="17">
+  <div class="inner">
+    <div class="badge gold">Global Precedent</div>
+    <h2>California wouldn&rsquo;t be first.</h2>
+    <p class="lead" style="margin-bottom: 1.5rem;">
+      The <strong>European Union</strong> already requires date information to be<br>
+      &ldquo;clearly legible&rdquo; and &ldquo;not hidden, obscured, or interrupted by any other matter.&rdquo;
+    </p>
+    <p class="lead" style="margin-bottom: 2rem;">
+      <strong>Canada</strong> requires it too.
+    </p>
+    <p style="font-size: 1.3rem; color: var(--ca-gold); font-weight: 700;">
+      California led the country on standardizing the words.<br>
+      We can lead on making them readable.
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 19: COALITION -->
+<div class="slide slide-text" data-notes-index="18">
+  <div class="inner">
+    <div class="badge gold">Natural Allies</div>
+    <h2 style="font-size: 2rem;">This is a low-cost bill with an unusually broad base.</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+      <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 1rem;">
+        <p style="font-size: 0.9rem; color: rgba(30,30,50,0.8);">&#127793; Environmental &amp; food-waste groups</p>
+      </div>
+      <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 1rem;">
+        <p style="font-size: 0.9rem; color: rgba(30,30,50,0.8);">&#128083; Seniors&rsquo; groups &amp; disability advocates</p>
+      </div>
+      <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 1rem;">
+        <p style="font-size: 0.9rem; color: rgba(30,30,50,0.8);">&#127836; Food banks</p>
+      </div>
+      <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; padding: 1rem;">
+        <p style="font-size: 0.9rem; color: rgba(30,30,50,0.8);">&#129309; Consumer groups</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 20: THANK YOU -->
+<div class="slide slide-text" data-notes-index="19">
+  <div class="inner">
+    <h1 style="font-size: 5rem;">
+      Thank you.
+    </h1>
+    <p class="lead" style="margin-top: 2rem; font-size: 1.4rem; color: var(--ca-gold); font-weight: 600;">
+      Amanda Chen
+    </p>
+  </div>
+</div>
+
+</div><!-- .slides -->
+
+<!-- NAVIGATION -->
+<div class="nav-arrows">
+  <button class="nav-btn" id="prevBtn" style="background:rgba(255,255,255,0.5);color:var(--text-dark);">&larr;</button>
+  <button class="nav-btn" id="nextBtn" style="background:rgba(255,255,255,0.5);color:var(--text-dark);">&rarr;</button>
+</div>
+<!-- SPEAKER NOTES PANEL -->
+
+<!-- SPEAKER NOTES PANEL -->
+<!-- PROGRESS DOTS -->
+<div class="progress-dots" id="progressDots"></div>
+
+<script>
+const SPEAKER_NOTES = [
+  // 0 — Title
+  `<p><strong>Opening:</strong></p>
+<p>Good Morning/Afternoon, Assemblymember Lee and other legislative representatives,</p>
+<p>Today, I want you to experience my role on family shopping trips. So let's do a fun, small experiment: I call it "When's Lunch", the unofficial sequel to "What's for Lunch".</p>`,
+
+  // 1 — Experiment setup
+  `<p>I have an established lunch proposal for myself today: A tortilla and peanut butter roll-up. On the side, I have chips. Throughout the day, I'm drinking lemonade. Seems nice, right?</p>
+<p>Everything here is real: bought off a local California 24th District grocery shelf. And every single item shown here is required by law to carry a date: a 'best by' or 'use by.' California passed that law two years ago. It went into effect the first of July this year.</p>
+<p>So before I eat, I should be able to check every date. Let's see how that goes.</p>`,
+
+  // 2 — Tortillas pack 1
+  `<p><strong>Number 1, Tortillas</strong> — first pack, no date.</p>`,
+
+  // 3 — Tortillas pack 2
+  `<p>Second, buried in the ingredients list. This is what I call the overlapping problem: Marketing and food information overlapping over the date label. Tortilla, <strong>Check</strong>.</p>`,
+
+  // 4 — Peanut butter
+  `<p><strong>Number 2: peanut butter.</strong> I like creamy peanut butter. But look at the lid… I can't read the date. Low contrast, meaning the words and lid are so similar in color that it's illegible. So creamy's out.</p>
+<p>Can I have natural instead? Same problem.</p>
+<p>Fine, I'll settle for crunchy, my least favorite. Same problem.</p>`,
+
+  // 5 — Discrepancy text
+  `<p>…But this jar? Bam — clear as day. Same product, two different results—what I'll call the discrepancy problem. Peanut butter, <strong>Check</strong>.</p>`,
+
+  // 6 — Peanut butter detail (page 5)
+  `<p>Here's a closer look at the discrepancy: same product line, same store, but one jar is completely illegible while another is perfectly clear. No standard. No consistency.</p>`,
+
+  // 7 — Chips title
+  `<p>Actually, let's not let me have all the fun. Here's my snack. Can you read me the date? …Hard, right?</p>`,
+
+  // 8 — Chips overlap
+  `<p>Look where they put the date. It's printed right on top of the brand name. When the marketing and the date share the same space, the date loses every time. Another overlapping problem.</p>`,
+
+  // 9 — Lemonade
+  `<p><strong>So lastly, what's the drink I'm drinking all day? Lemonade!</strong> Any volunteers want to read the date? I doubt even my eye doctor could read this one: It's right there. That's another low contrast problem, this time clear date embossment on clear plastic.</p>`,
+
+  // 10 — Lemonade detail (page 6)
+  `<p>Even zoomed in on the bottle, the date is nearly impossible to read. Clear embossment on clear plastic — there's practically zero contrast. Look closely and you still can't make it out.</p>`,
+
+  // 11 — Orange juice
+  `<p>So instead, I switched to orange juice—high contrast, easy to read. …I don't even like orange juice. Drink, check.</p>`,
+
+  // 11 — The count
+  `<p><strong>At the end:</strong></p>
+<p>How many food items did I have to pick up and place back because I couldn't read the date label today? <strong>5, out of 9 items</strong>, which is more than half.</p>
+<p>How many actually were food items I had to swap with alternatives that were totally not my first preference because I couldn't read the date label today? And of the 4 things I actually bought, half weren't my first choice — not for price, not for taste, but because I couldn't read the date.</p>
+<p>How many did my phone camera almost miss — even under good lighting, wiped clean, and shot against a dark background to make the text stand out? <strong>8 out of 25.</strong> Not cherry-picked for the sake of this survey, just normal things I'd eat.</p>
+<p>Here's the thing. You all have good eyesight. You had no line behind you, no aunty in the rush to work half-aggressively ushering you forward, no time pressure. And it still wasn't easy. Now picture my highly-nearsighted mom or any older shopper, squinting, trying to read, to comprehend, in vain, the date label on food they want to buy.</p>`,
+
+  // 12 — Full 25
+  `<p>And here's the thing. Of the 25 photos I took — under good lighting, wiped clean, shot against a dark background to make the text stand out — <strong>8 were illegible.</strong> Not cherry-picked for this survey. Just normal things I'd eat.</p>`,
+
+  // 13 — Human cost
+  `<p>When you can't find or read the date, you do one of two things: you eat something you shouldn't, or, far more often, you throw out food that was perfectly fine.</p>
+<p>That confusion drives Americans to throw away about <strong>three billion pounds</strong> of food—that amounts to <strong>seven billion dollars</strong>—every single year.</p>`,
+
+  // 14 — The gap
+  `<p>California already tells companies what these dates must say. It doesn't require them to be readable. <strong>My bill closes that gap.</strong></p>
+<p>Two years ago, California passed AB 660. Good law. It said: food companies have to use clear, standardized date words — "Best if Used by," "Use by" — and it banned the confusing "sell by" dates. It went into effect this July.</p>
+<p>But AB 660 only fixed the words. It said nothing about whether you can actually read them. So a company can print the exact right phrase — in ink the same color as the background, or squeezed under the barcode, or stamped over its own logo — and it's fully legal. The law tells them what to say. It never says make it readable. That's the gap. That's the whole problem in one sentence.</p>
+<p>And here's the part that gets me: California and the federal government already require legibility for almost everything else on that same package. The Nutrition Facts panel? Federal law requires it to be "plainly legible." The net-quantity statement? Required to appear in "distinct contrast." Even alcohol labels have a contrast rule.</p>
+<p>So on a single package, the calorie count has to be legible. The net weight has to be legible. But the date — the one piece of information that tells you if the food is still safe — is the one thing with no legibility standard at all. <strong>The date is the odd one out.</strong></p>`,
+
+  // 15 — The solution
+  `<p><strong>So here's what my bill actually does.</strong> It adds one section to the existing date-label law. Three simple requirements.</p>
+<p><strong>One, contrast.</strong> The date has to stand out from its background enough to be read. And to make that objective, not a matter of opinion, I use the same standard accessibility experts already use: a 4.5-to-1 contrast ratio. If you print black on white, you automatically pass — that's a safe harbor, not a mandate.</p>
+<p>On some of the products I showed you today, the printing was so faint it was nearly the same color as the background, almost invisible, approaching a 1-to-1 ratio. That's not just a readability issue—that's an invisibility issue.</p>
+<p><strong>Two, a clear field.</strong> No other text, graphic, or logo overlapping the date. The date can't be buried under marketing.</p>
+<p><strong>Three — it only applies going forward,</strong> to products made after July 2029. So no company has to throw away packaging they already printed. Two years of runway.</p>
+<p>That's it. No new agency. No new paperwork. It folds into the enforcement that already exists. It costs the state essentially nothing.</p>`,
+
+  // 16 — Safe harbor
+  `<p>I know the pushback. Food manufacturers will say a formatting rule is too prescriptive, or that a contrast ratio built for computer screens doesn't belong on a package. Fair concerns. Here's my answer.</p>
+<p>It's a safe harbor, not a straitjacket — a company can hit the 4.5 ratio, or meet the general "distinct contrast" standard any other way they like as long as they comply.</p>
+<p>On the screen-versus-package point: I'm borrowing the number, not the screen. A contrast ratio is just math about two colors — it's true whether it's on a phone or a peanut butter jar. My bill lets the Department of Food and Agriculture set the exact measurement method for physical packages.</p>
+<p>And most big manufacturers already meet this — because they already comply with Europe's rules.</p>
+<p>This is also a proven path. California didn't standardize date labels in one shot — it took three tries over nearly a decade. A bill in 2016 that failed. A voluntary version in 2017. And finally AB 660 in 2024. Each one built on the last. My bill is simply the next step: we fixed the words; now we make them legible.</p>`,
+
+  // 17 — Precedent
+  `<p>And I'm not inventing this out of thin air. The EU already requires date information to be clearly legible and — almost word for word what I'm proposing — not hidden, obscured, or interrupted by any other matter on the package. Canada requires it too.</p>
+<p>So this isn't experimental. It's the standard much of the world already follows. California led the country on standardizing the words; we can lead on making them readable.</p>`,
+
+  // 18 — Coalition
+  `<p>I don't have a coalition signed up yet — this is a proposal, not a campaign. But look at who this naturally brings together: Environmental and food-waste groups, because it keeps good food from being tossed. Seniors' groups and disability advocates, because a readable label is an accessibility issue. Food banks. Consumer groups.</p>
+<p>That's an unusually broad, bipartisan base for one small, low-cost bill — and that breadth is exactly why it could move.</p>`,
+
+  // 19 — Thank You
+  `<p><strong>Thank you.</strong> I'm happy to take any questions.</p>`
+];
+
+// Navigation
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+function goTo(index) {
+  if (index < 0) index = 0;
+  if (index >= total) index = total - 1;
+  if (index === current) return;
+  slides[current].classList.remove('active');
+  slides[index].classList.add('active');
+  current = index;
+  // Reset reveal: hide all data-reveal elements
+  slides[current].querySelectorAll('[data-reveal]').forEach(el => el.classList.remove('visible'));
+  // Reset image copy state
+  slides[current].classList.remove('show-copy');
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('prevBtn').disabled = current === 0;
+  // Next is disabled only when on last slide AND all reveals are done
+  const revealables = slides[current].querySelectorAll('[data-reveal]');
+  const allRevealed = !revealables.length || [...revealables].every(el => el.classList.contains('visible'));
+  document.getElementById('nextBtn').disabled = current === total - 1 && allRevealed;
+  document.querySelectorAll('.progress-dot').forEach((dot, i) => {
+    dot.classList.toggle('active', i === current);
+  });
+}
+
+function goNext() {
+  // Reveal all hidden overlay elements at once, then advance
+  const revealables = slides[current].querySelectorAll('[data-reveal]:not(.visible)');
+  if (revealables.length) {
+    revealables.forEach(el => el.classList.add('visible'));
+    // If this slide has a copy image, fade it in at the same time
+    if (slides[current].querySelector('.slide-image-bg.is-copy')) {
+      slides[current].classList.add('show-copy');
+    }
+    updateUI();
+    return;
+  }
+  // All revealed — advance to next slide
+  goTo(current + 1);
+}
+
+function goPrev() {
+  // Go back immediately (no reverse-reveal)
+  goTo(current - 1);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault(); goNext();
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault(); goPrev();
+  }
+});
+
+document.getElementById('prevBtn').addEventListener('click', goPrev);
+document.getElementById('nextBtn').addEventListener('click', goNext);
+
+// Progress dots
+const dotsContainer = document.getElementById('progressDots');
+for (let i = 0; i < total; i++) {
+  const dot = document.createElement('button');
+  dot.className = 'progress-dot';
+  dot.addEventListener('click', () => goTo(i));
+  dotsContainer.appendChild(dot);
+}
+
+// Touch swipe
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? goTo(current + 1) : goTo(current - 1);
+  }
+});
+
+goTo(0);
+</script>
+
+</body>
+</html>
