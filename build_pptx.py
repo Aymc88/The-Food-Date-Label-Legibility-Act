@@ -320,9 +320,6 @@ for i, (lt, rt, rc) in enumerate(rows):
     rect(sl12, 2.5, y, 8.3, 0.65, fill=bg_c, border=bd_c)
     tb(sl12, 2.8, y, 4.6, 0.65, lt, sz=15, bold=(i == 2), align=PP_ALIGN.LEFT)
     tb(sl12, 7.4, y, 3.2, 0.65, rt, sz=14, bold=True, color=rc, align=PP_ALIGN.RIGHT)
-tb(sl12, 1.0, 6.1, 11.333, 0.8,
-   "The one piece of information that tells you if the food is still safe\nis the one thing with no legibility standard.",
-   sz=16, bold=True, color=CA_GOLD)
 print("  12/17 The Gap")
 
 # 13 — The Fix
