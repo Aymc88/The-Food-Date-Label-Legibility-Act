@@ -332,11 +332,9 @@ tb(sl13, 1.0, 1.6, 11.333, 0.4, "Three simple requirements.",
    sz=18, bold=True, color=CA_GOLD)
 for i, (num, title, body) in enumerate([
     ("01 · Contrast", "The date must stand out from its background",
-     "A 4.5:1 contrast ratio, the same standard accessibility experts already use."),
-    ("02 · Clear Field", "No other text, graphic, or logo overlapping the date",
-     "The date can't be buried under marketing."),
-    ("03 · Forward-Looking", "Only applies to products made after July 2029",
-     "Two years of runway. No company has to throw away packaging they've already printed."),
+     "A 4.5:1 contrast ratio."),
+    ("02 · Clear Field", "No other text, graphic, or logo overlapping the date", None),
+    ("03 · Forward-Looking", "Only applies to products made after July 2029", None),
 ]):
     x = 0.8 + i * 4.1
     card(sl13, x, 2.5, 3.6, 3.8, kicker=num, title=title, body=body)
