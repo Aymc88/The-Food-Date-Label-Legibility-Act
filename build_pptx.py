@@ -278,7 +278,7 @@ for i, (num, label) in enumerate([
     tb(sl9, x + 0.3, 3.5, 2.9, 1.0, num, sz=64, bold=True,
        color=ACCENT_RED, font=FONT_SERIF, align=PP_ALIGN.CENTER)
     tb(sl9, x + 0.3, 4.7, 2.9, 0.7, label, sz=16, bold=True,
-       color=TEXT_DARK, align=PP_ALIGN.CENTER)
+       color=ACCENT_RED, align=PP_ALIGN.CENTER)
 print("  9/17 The Results")
 
 # 10 — Photo survey
@@ -326,7 +326,7 @@ print("  12/17 The Gap")
 sl13 = prs.slides.add_slide(blank)
 add_bg(sl13)
 badge(sl13, "THE FIX", l=5.8, t=0.3, w=1.7)
-tb(sl13, 1.0, 1.0, 11.333, 0.6, "My bill adds one section to existing law.",
+tb(sl13, 1.0, 1.0, 11.333, 0.6, "Adding one section to existing law",
    sz=26, bold=True, color=TEXT_DARK, font=FONT_SERIF)
 tb(sl13, 1.0, 1.6, 11.333, 0.4, "Three simple requirements.",
    sz=18, bold=True, color=CA_GOLD)
@@ -353,9 +353,9 @@ for i, (ql, qt, ans) in enumerate([
 ]):
     x = 0.8 + i * 6.5
     rect(sl14, x, 1.5, 5.7, 4.5, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(1.5))
-    tb(sl14, x + 0.3, 1.8, 3.0, 0.3, ql, sz=11, bold=True, color=CA_GOLD, align=PP_ALIGN.LEFT)
-    tb(sl14, x + 0.3, 2.2, 5.1, 0.6, qt, sz=16, bold=True, color=TEXT_DARK, align=PP_ALIGN.LEFT)
-    tb(sl14, x + 0.3, 2.9, 5.1, 2.5, ans, sz=13, color=MUTED, align=PP_ALIGN.LEFT)
+    tb(sl14, x + 0.3, 1.8, 3.0, 0.3, ql, sz=13, bold=True, color=CA_GOLD, align=PP_ALIGN.LEFT)
+    tb(sl14, x + 0.3, 2.2, 5.1, 0.6, qt, sz=18, bold=True, color=TEXT_DARK, align=PP_ALIGN.LEFT)
+    tb(sl14, x + 0.3, 2.9, 5.1, 2.5, ans, sz=15, color=MUTED, align=PP_ALIGN.LEFT)
 print("  14/17 Safe Harbor")
 
 # 15 — A Proven Path (KEEP VERBATIM timeline)
