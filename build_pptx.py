@@ -269,14 +269,14 @@ add_bg(sl9)
 badge(sl9, "THE RESULTS", l=5.3, t=0.8, w=2.7)
 tb(sl9, 1.0, 1.6, 11.333, 0.8, "What just happened?", sz=32, bold=True,
    color=TEXT_DARK, font=FONT_SERIF)
-for i, (num, label, gold) in enumerate([
-    ("4", "of 7 items put back", False),
-    ("2", "swaps for alternatives", True),
+for i, (num, label) in enumerate([
+    ("4", "of 7 items put back"),
+    ("2", "swaps for alternatives"),
 ]):
     x = 2.9 + i * 4.3
     card(sl9, x, 3.2, 3.5, 2.4, body=None)
     tb(sl9, x + 0.3, 3.5, 2.9, 1.0, num, sz=64, bold=True,
-       color=(CA_GOLD if gold else ACCENT_RED), font=FONT_SERIF, align=PP_ALIGN.CENTER)
+       color=ACCENT_RED, font=FONT_SERIF, align=PP_ALIGN.CENTER)
     tb(sl9, x + 0.3, 4.7, 2.9, 0.7, label, sz=16, bold=True,
        color=TEXT_DARK, align=PP_ALIGN.CENTER)
 print("  9/17 The Results")
