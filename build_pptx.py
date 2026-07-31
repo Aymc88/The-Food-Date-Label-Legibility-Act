@@ -173,12 +173,12 @@ def img_slide(tag, heading, img, copy_img=None):
     # Overlay bar at bottom
     rect(sl, 0, 5.6, 13.333, 1.9, fill=RGBColor(0xF8, 0xF6, 0xF0))
 
-    # Outlined gold tag (matches badge language)
-    tag_s = rect(sl, 0.6, 5.8, 4.0, 0.4, border=CA_GOLD, bw=Pt(1.5))
+    # White-on-gold tag
+    tag_s = rect(sl, 0.6, 5.8, 4.0, 0.4, fill=CA_GOLD, border=CA_GOLD)
     ttf = tag_s.text_frame
     ttf.paragraphs[0].text = tag
     ttf.paragraphs[0].font.size = Pt(12)
-    ttf.paragraphs[0].font.color.rgb = CA_GOLD
+    ttf.paragraphs[0].font.color.rgb = WHITE
     ttf.paragraphs[0].font.bold = True
     ttf.paragraphs[0].font.name = FONT_SANS
     ttf.paragraphs[0].alignment = PP_ALIGN.CENTER
@@ -218,11 +218,11 @@ print("  1/17 Title")
 # 2 — Chips (physical sample, text slide)
 sl2 = prs.slides.add_slide(blank)
 add_bg(sl2)
-tag_s = rect(sl2, 4.7, 3.0, 3.9, 0.5, border=CA_GOLD, bw=Pt(1.5))
+tag_s = rect(sl2, 4.7, 3.0, 3.9, 0.5, fill=CA_GOLD, border=CA_GOLD)
 ttf = tag_s.text_frame
 ttf.paragraphs[0].text = "PRODUCT 1 · CHIPS"
 ttf.paragraphs[0].font.size = Pt(12)
-ttf.paragraphs[0].font.color.rgb = CA_GOLD
+ttf.paragraphs[0].font.color.rgb = WHITE
 ttf.paragraphs[0].font.bold = True
 ttf.paragraphs[0].font.name = FONT_SANS
 ttf.paragraphs[0].alignment = PP_ALIGN.CENTER
