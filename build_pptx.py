@@ -413,7 +413,8 @@ add_bg(sl17)
 badge(sl17, "PROPOSED LEGISLATION", l=4.2, t=1.2, w=4.9)
 tb(sl17, 1.0, 2.0, 11.333, 1.5,
    "The Food Date Label\nLegibility Act", sz=44, bold=True, color=TEXT_DARK, font=FONT_SERIF)
-tb(sl17, 1.0, 4.3, 11.333, 0.6, "By Amanda Chen", sz=18, color=CA_GOLD, bold=True)
+tb(sl17, 1.0, 4.3, 11.333, 0.6, "We fixed the words — now we make them legible.",
+   sz=20, color=CA_GOLD, bold=True)
 print("  17/17 Closing")
 
 # ── Speaker notes ──
