@@ -385,9 +385,6 @@ for i, (year, label, highlight) in enumerate([
         rect(sl15, x, 2.7, 2.4, 2.2, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
         tb(sl15, x, 3.0, 2.4, 0.6, year, sz=30, bold=True, color=ACCENT_RED)
         tb(sl15, x + 0.15, 3.7, 2.1, 1.0, label, sz=13, color=MUTED)
-tb(sl15, 1.0, 5.4, 11.333, 0.8,
-   "We fixed the words — now we make them legible.",
-   sz=20, bold=True, color=CA_GOLD)
 print("  15/17 Proven Path")
 
 # 16 — Global Precedent
