@@ -347,9 +347,9 @@ rect(sl14, 3.4, 0.4, 6.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
 tb(sl14, 3.4, 0.4, 6.5, 0.45, "SAFE HARBOR, NOT A MANDATE", sz=11, color=CA_GOLD, bold=True)
 for i, (ql, qt, ans) in enumerate([
     ("Question #1", "Isn't a formatting rule too prescriptive?",
-     "4.5:1 is a safe harbor, not a mandate. If a manufacturer prints black ink on a white box, they automatically comply — no calculations needed."),
+     "4.5:1 is a safe harbor, not a mandate. If a manufacturer prints black ink on a white box, they automatically comply."),
     ("Question #2", "Isn't a contrast ratio a screen standard?",
-     "I'm borrowing the number, not the screen. Contrast is just math about two colors — true on a phone or a peanut butter jar. The bill lets the Department of Food and Agriculture set the measurement method for physical packages."),
+     "I'm borrowing the number, not the screen. Also, the bill lets the Department of Food and Agriculture set the measurement method for physical packages."),
 ]):
     x = 0.8 + i * 6.5
     rect(sl14, x, 1.5, 5.7, 4.5, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(1.5))
@@ -394,9 +394,6 @@ tb_multi(sl16, 1.5, 2.5, 10.333, 1.6, [
     ('any other matter."', {"sz": 18}),
 ])
 tb(sl16, 1.5, 4.2, 10.333, 0.6, "Canada requires it too.", sz=18, bold=True, color=TEXT_DARK)
-tb(sl16, 1.0, 5.1, 11.333, 0.9,
-   "California led the country on standardizing the words.\nWe can lead on making them readable.",
-   sz=20, bold=True, color=CA_GOLD)
 print("  16/17 Global Precedent")
 
 # 17 — Closing
