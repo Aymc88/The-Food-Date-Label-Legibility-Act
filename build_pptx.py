@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Rebuild the Food Date Label Legibility Act deck (17 slides, current script).
 
-Slide order follows the July 2026 script:
-  chips → lemonade → orange juice → creamy → natural → crunchy #1 → crunchy #2
-  → bottom line → human cost → gap (AB 660) → odd one out → the fix → safe harbor
-  → proven path → global precedent → closing
+Design language (from slide 14, the user-approved "Safe Harbor" slide):
+  - outlined gold badge at top center
+  - tinted gold cards (FDF6E0 fill, gold border) with kicker / title / body, left-aligned
+  - danger cards (red tint) for the "no standard" moments
+  - image slides: outlined gold tag instead of filled
+Slides 14 (Safe Harbor) and 15 (A Proven Path timeline) are kept verbatim.
 """
 
 from pptx import Presentation
@@ -27,6 +29,9 @@ SLIDE_BG = RGBColor(0xF8, 0xF6, 0xF0)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 MUTED = RGBColor(0x80, 0x80, 0x90)
 CARD_BG = RGBColor(0xF0, 0xEE, 0xE8)
+CARD_GOLD = RGBColor(0xFD, 0xF6, 0xE0)   # tinted gold card fill (slide-14 recipe)
+CARD_RED = RGBColor(0xFD, 0xE8, 0xE8)    # danger card fill
+RED_BORDER = RGBColor(0xE0, 0xA0, 0xA0)
 GOLD_BORDER = RGBColor(0xB8, 0x86, 0x0B)
 GREEN = RGBColor(0x2D, 0x7D, 0x46)
 IMG_BG = RGBColor(0xF0, 0xED, 0xE6)
@@ -118,8 +123,42 @@ def rect(slide, l, t, w, h, fill=None, border=None, bw=Pt(1)):
     return s
 
 
+def badge(slide, text, l=5.5, t=0.4, w=2.3, sz=11):
+    """Outlined gold badge (transparent fill, gold border, gold text)."""
+    b = rect(slide, l, t, w, 0.45, border=CA_GOLD, bw=Pt(1.5))
+    tf = b.text_frame
+    tf.paragraphs[0].text = text
+    tf.paragraphs[0].font.size = Pt(sz)
+    tf.paragraphs[0].font.color.rgb = CA_GOLD
+    tf.paragraphs[0].font.bold = True
+    tf.paragraphs[0].font.name = FONT_SANS
+    tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+    return b
+
+
+def card(slide, x, y, w, h, kicker=None, title=None, body=None,
+         danger=False, highlight=False):
+    """Slide-14 style panel card: tinted fill, gold border, kicker/title/body."""
+    if danger:
+        fill, border = CARD_RED, RED_BORDER
+    else:
+        fill, border = CARD_GOLD, GOLD_BORDER
+    bw = Pt(2.5) if highlight else Pt(1.5)
+    rect(slide, x, y, w, h, fill=fill, border=border, bw=bw)
+    if kicker:
+        tb(slide, x + 0.3, y + 0.3, w - 0.6, 0.4, kicker, sz=12, bold=True,
+           color=(ACCENT_RED if danger else CA_GOLD), align=PP_ALIGN.LEFT)
+    if title:
+        tb(slide, x + 0.3, y + 0.75, w - 0.6, 0.8, title, sz=16, bold=True,
+           color=TEXT_DARK, align=PP_ALIGN.LEFT)
+    if body:
+        tb(slide, x + 0.3, y + 1.6, w - 0.6, h - 1.9, body, sz=13,
+           color=MUTED, align=PP_ALIGN.LEFT)
+    return slide
+
+
 def img_slide(tag, heading, img, copy_img=None):
-    """Full-bleed image slide with overlay."""
+    """Full-bleed image slide with overlay and outlined gold tag."""
     sl = prs.slides.add_slide(blank)
     add_bg(sl, IMG_BG)
 
@@ -134,12 +173,12 @@ def img_slide(tag, heading, img, copy_img=None):
     # Overlay bar at bottom
     rect(sl, 0, 5.6, 13.333, 1.9, fill=RGBColor(0xF8, 0xF6, 0xF0))
 
-    # Gold tag
-    tag_s = rect(sl, 0.6, 5.8, 4.0, 0.4, fill=CA_GOLD, border=CA_GOLD)
+    # Outlined gold tag (matches badge language)
+    tag_s = rect(sl, 0.6, 5.8, 4.0, 0.4, border=CA_GOLD, bw=Pt(1.5))
     ttf = tag_s.text_frame
     ttf.paragraphs[0].text = tag
     ttf.paragraphs[0].font.size = Pt(12)
-    ttf.paragraphs[0].font.color.rgb = WHITE
+    ttf.paragraphs[0].font.color.rgb = CA_GOLD
     ttf.paragraphs[0].font.bold = True
     ttf.paragraphs[0].font.name = FONT_SANS
     ttf.paragraphs[0].alignment = PP_ALIGN.CENTER
@@ -150,25 +189,15 @@ def img_slide(tag, heading, img, copy_img=None):
     return sl
 
 
-def text_slide(badge, heading, build_fn=None):
-    """Standard text slide."""
+def text_slide(badge_text, heading, build_fn=None, heading_sz=30):
+    """Standard text slide with outlined gold badge and serif heading."""
     sl = prs.slides.add_slide(blank)
     add_bg(sl, SLIDE_BG)
-
-    if badge:
-        b = rect(sl, 5.5, 0.4, 2.3, 0.4, border=CA_GOLD, bw=Pt(1.5))
-        tf = b.text_frame
-        tf.paragraphs[0].text = badge
-        tf.paragraphs[0].font.size = Pt(11)
-        tf.paragraphs[0].font.color.rgb = CA_GOLD
-        tf.paragraphs[0].font.bold = True
-        tf.paragraphs[0].font.name = FONT_SANS
-        tf.paragraphs[0].alignment = PP_ALIGN.CENTER
-
+    if badge_text:
+        badge(sl, badge_text)
     if heading:
-        tb(sl, 1.0, 1.2, 11.333, 1.0, heading, sz=30, bold=True,
+        tb(sl, 1.0, 1.2, 11.333, 1.0, heading, sz=heading_sz, bold=True,
            color=TEXT_DARK, font=FONT_SERIF)
-
     if build_fn:
         build_fn(sl)
     return sl
@@ -180,8 +209,7 @@ print("Building slides...")
 # 1 — Title
 sl0 = prs.slides.add_slide(blank)
 add_bg(sl0)
-rect(sl0, 4.2, 1.8, 4.9, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl0, 4.2, 1.8, 4.9, 0.45, "PROPOSED LEGISLATION", sz=11, color=CA_GOLD, bold=True)
+badge(sl0, "PROPOSED LEGISLATION", l=4.2, t=1.8, w=4.9)
 tb(sl0, 1.0, 2.8, 11.333, 2.0,
    "The Food Date Label\nLegibility Act", sz=48, bold=True, color=TEXT_DARK, font=FONT_SERIF)
 tb(sl0, 1.0, 5.0, 11.333, 0.6, "By Amanda Chen", sz=18, color=CA_GOLD, bold=True)
@@ -226,116 +254,121 @@ img_slide("THE DISCREPANCY PROBLEM",
           "page_6.png", "page_6_copy.png")
 print("  8/17 Crunchy #2")
 
-# 9 — Bottom line
+# 9 — Bottom line (3 stat cards in the slide-14 style)
 sl9 = prs.slides.add_slide(blank)
 add_bg(sl9)
-rect(sl9, 5.0, 0.5, 3.3, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl9, 5.0, 0.5, 3.3, 0.45, "THE BOTTOM LINE", sz=11, color=CA_GOLD, bold=True)
+badge(sl9, "THE BOTTOM LINE", l=5.0, t=0.5, w=3.3)
 tb(sl9, 1.0, 1.3, 11.333, 0.8, "From just one routine grocery run…",
    sz=30, bold=True, color=TEXT_DARK, font=FONT_SERIF)
-for i, (num, label) in enumerate([
-    ("4/7", "Failure rate — unreadable dates"),
-    ("2/3", "Forced compromise — not my first choice"),
-    ("8/25", "Camera test — missed in a standard pantry"),
+for i, (num, kicker, body, gold) in enumerate([
+    ("4/7", "Failure Rate", "More than half the items I picked up had unreadable dates.", False),
+    ("2/3", "Forced Compromise", "Of the 3 things I actually bought, 2 weren't my first choice — not for price, not for taste, but because the dates were invisible.", True),
+    ("8/25", "Camera Test", "Under optimal lighting, my phone camera almost missed 8 items — nearly a third of a standard pantry.", False),
 ]):
-    x = 1.5 + i * 3.7
-    rect(sl9, x, 3.0, 3.2, 2.2, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
-    tb(sl9, x, 3.3, 3.2, 0.9, num, sz=48, bold=True,
-       color=ACCENT_RED if i != 1 else CA_GOLD)
-    tb(sl9, x + 0.2, 4.3, 2.8, 0.8, label, sz=13, color=TEXT_DARK)
-tb(sl9, 1.0, 5.6, 11.333, 0.7,
+    x = 0.9 + i * 4.0
+    card(sl9, x, 2.6, 3.6, 3.2, kicker=kicker, body=None)
+    tb(sl9, x + 0.3, 2.9, 3.0, 1.0, num, sz=44, bold=True,
+       color=(CA_GOLD if gold else ACCENT_RED), font=FONT_SERIF, align=PP_ALIGN.LEFT)
+    tb(sl9, x + 0.3, 4.0, 3.0, 1.6, body, sz=12, color=MUTED, align=PP_ALIGN.LEFT)
+tb(sl9, 1.0, 6.1, 11.333, 0.6,
    "Good eyesight. No crowd. No time pressure. Perfect lighting. — It was still hard to read.",
-   sz=15, italic=True, color=MUTED)
+   sz=14, italic=True, color=MUTED)
 print("  9/17 Bottom Line")
 
-# 10 — Human cost
+# 10 — Human cost (2 cards + gold footer)
 sl10 = prs.slides.add_slide(blank)
 add_bg(sl10)
-rect(sl10, 4.9, 0.5, 3.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl10, 4.9, 0.5, 3.5, 0.45, "THE HUMAN COST", sz=11, color=CA_GOLD, bold=True)
+badge(sl10, "THE HUMAN COST", l=4.9, t=0.5, w=3.5)
 tb(sl10, 1.0, 1.2, 11.333, 1.0,
    "When shoppers can't read a date label,\nthey do one of two things:",
    sz=28, bold=True, color=TEXT_DARK, font=FONT_SERIF)
-for i, opt in enumerate(["Eat food they shouldn't", "Throw out food that was perfectly fine"]):
-    x = 2.0 + i * 5.0
-    rect(sl10, x, 3.0, 4.2, 1.5, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(1.5))
-    tb(sl10, x, 3.0, 4.2, 1.5, opt, sz=18, bold=True, color=TEXT_DARK)
-tb_multi(sl10, 2.0, 5.0, 9.333, 1.2, [
+card(sl10, 2.0, 2.9, 4.3, 2.2,
+     kicker="Less Often",
+     title="Eat food they shouldn't",
+     body="Uncertain whether it's still safe — they take the chance.")
+card(sl10, 7.0, 2.9, 4.3, 2.2,
+     kicker="Far More Often",
+     title="Throw out food that was perfectly fine",
+     body="The default when you can't verify the date.")
+tb_multi(sl10, 2.0, 5.5, 9.333, 1.2, [
     ("3 billion pounds of food · $7 billion — every single year.", {"sz": 20, "bold": True}),
     ("We fixed the words — now let's make them readable.", {"sz": 18, "bold": True, "color": CA_GOLD}),
 ])
 print("  10/17 Human Cost")
 
-# 11 — The Gap (AB 660)
+# 11 — The Gap (AB 660): what it did vs didn't
 sl11 = prs.slides.add_slide(blank)
 add_bg(sl11)
-rect(sl11, 5.9, 0.5, 1.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl11, 5.9, 0.5, 1.5, 0.45, "THE GAP", sz=11, color=CA_GOLD, bold=True)
+badge(sl11, "THE GAP", l=5.9, t=0.5, w=1.5)
 tb_multi(sl11, 1.0, 1.2, 11.333, 1.5, [
-    ("AB 660 fixed what to say.", {"sz": 30, "bold": True}),
-    ("It never said make it readable.", {"sz": 24, "bold": True, "color": ACCENT_RED}),
+    ("AB 660 fixed what to say.", {"sz": 28, "bold": True}),
+    ("It never said make it readable.", {"sz": 22, "bold": True, "color": ACCENT_RED}),
 ])
-rows = [("Standardized words — “Best if Used by,” “Use by”", "✓ AB 660 (2024)", GREEN),
-        ("Confusing “Sell by” dates", "✓ Banned", GREEN),
-        ("Legibility — can you read it?", "✗ No requirement", ACCENT_RED)]
-for i, (lt, rt, rc) in enumerate(rows):
-    y = 3.4 + i * 0.75
-    bg_c = RGBColor(0xF5, 0xF3, 0xEE) if i < 2 else RGBColor(0xFD, 0xE8, 0xE8)
-    bd_c = RGBColor(0xDD, 0xDD, 0xDD) if i < 2 else RGBColor(0xF0, 0xC0, 0xC0)
-    rect(sl11, 2.5, y, 8.3, 0.6, fill=bg_c, border=bd_c)
-    tb(sl11, 2.8, y, 4.4, 0.6, lt, sz=14, bold=(i == 2), align=PP_ALIGN.LEFT)
-    tb(sl11, 7.2, y, 3.4, 0.6, rt, sz=14, bold=True, color=rc, align=PP_ALIGN.RIGHT)
-tb(sl11, 1.0, 5.7, 11.333, 0.9,
-   "A company can print the exact right phrase — in ink the same color as the background,\nsqueezed under the barcode, or stamped over its own logo — and it's fully legal.",
-   sz=14, color=MUTED)
+card(sl11, 1.2, 3.1, 5.3, 2.6,
+     kicker="What AB 660 Did",
+     body=None)
+tb_multi(sl11, 1.5, 3.5, 4.7, 2.0, [
+    ("✓  Standardized date words — “Best if Used by,” “Use by”", {"sz": 14, "align": PP_ALIGN.LEFT}),
+    ("✓  Banned the confusing “Sell by” dates", {"sz": 14, "align": PP_ALIGN.LEFT}),
+    ("✓  In effect July 1, 2026", {"sz": 14, "align": PP_ALIGN.LEFT}),
+])
+card(sl11, 6.9, 3.1, 5.3, 2.6,
+     kicker="What AB 660 Didn't Do",
+     title="Require legibility",
+     body="A company can print the exact right phrase — in ink the same color as the background, squeezed under the barcode, or stamped over its own logo — and it's fully legal.",
+     danger=True)
+tb(sl11, 1.0, 6.0, 11.333, 0.6,
+   "The law tells them what to say. It never says make it readable.",
+   sz=16, bold=True, color=CA_GOLD)
 print("  11/17 The Gap")
 
 # 12 — The Odd One Out
 sl12 = prs.slides.add_slide(blank)
 add_bg(sl12)
-rect(sl12, 4.9, 0.5, 3.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl12, 4.9, 0.5, 3.5, 0.45, "THE ODD ONE OUT", sz=11, color=CA_GOLD, bold=True)
+badge(sl12, "THE ODD ONE OUT", l=4.9, t=0.5, w=3.5)
 tb(sl12, 1.0, 1.2, 11.333, 0.8, "Everything else on the package must be legible.",
    sz=26, bold=True, color=TEXT_DARK, font=FONT_SERIF)
-rows = [("Nutrition Facts panel", "✓ “Plainly legible” — federal law", GREEN),
-        ("Net quantity statement", "✓ “Distinct contrast”", GREEN),
-        ("Alcohol labels", "✓ Contrast rule", GREEN),
-        ("The date", "✗ No legibility standard at all", ACCENT_RED)]
-for i, (lt, rt, rc) in enumerate(rows):
-    y = 2.7 + i * 0.8
-    bg_c = RGBColor(0xF5, 0xF3, 0xEE) if i < 3 else RGBColor(0xFD, 0xE8, 0xE8)
-    bd_c = RGBColor(0xDD, 0xDD, 0xDD) if i < 3 else RGBColor(0xF0, 0xC0, 0xC0)
-    rect(sl12, 2.5, y, 8.3, 0.65, fill=bg_c, border=bd_c)
-    tb(sl12, 2.8, y, 4.4, 0.65, lt, sz=15, bold=(i == 3), align=PP_ALIGN.LEFT)
-    tb(sl12, 7.2, y, 3.4, 0.65, rt, sz=14, bold=True, color=rc, align=PP_ALIGN.RIGHT)
-tb(sl12, 1.0, 6.0, 11.333, 0.8,
-   "The calorie count has to be legible. The net weight has to be legible.\nThe date is the odd one out.",
+card(sl12, 1.5, 2.6, 6.0, 3.0,
+     kicker="Already Required by Law",
+     body=None)
+tb_multi(sl12, 1.8, 3.1, 5.4, 2.3, [
+    ("✓  Nutrition Facts — “plainly legible” (federal law)", {"sz": 14, "align": PP_ALIGN.LEFT}),
+    ("✓  Net quantity statement — “distinct contrast”", {"sz": 14, "align": PP_ALIGN.LEFT}),
+    ("✓  Alcohol labels — contrast rule", {"sz": 14, "align": PP_ALIGN.LEFT}),
+])
+card(sl12, 7.9, 2.6, 4.0, 3.0,
+     kicker="The Date",
+     title="No legibility standard at all",
+     body="The one piece of information that tells you if the food is still safe.",
+     danger=True)
+tb(sl12, 1.0, 6.0, 11.333, 0.6, "The date is the odd one out.",
    sz=16, bold=True, color=CA_GOLD)
 print("  12/17 The Odd One Out")
 
-# 13 — The Fix
+# 13 — The Fix (3 requirement cards)
 sl13 = prs.slides.add_slide(blank)
 add_bg(sl13)
-rect(sl13, 5.8, 0.3, 1.7, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl13, 5.8, 0.3, 1.7, 0.45, "THE FIX", sz=11, color=CA_GOLD, bold=True)
-tb(sl13, 1.0, 1.0, 11.333, 0.6, "My bill adds one section to existing law.", sz=26, bold=True, color=TEXT_DARK, font=FONT_SERIF)
-tb(sl13, 1.0, 1.6, 11.333, 0.4, "Three simple requirements.", sz=18, bold=True, color=CA_GOLD)
-for i, (num, title, desc) in enumerate([
-    ("01", "Contrast", "4.5:1 contrast ratio — the same standard accessibility experts already use. Black on white passes automatically: a safe harbor, not a mandate."),
-    ("02", "Clear Field", "No other text, graphic, or logo overlapping the date. The date can't be buried under marketing."),
-    ("03", "Forward-Looking", "Only applies to products made after July 2029. Two years of runway. No company has to throw away packaging they've already printed."),
+badge(sl13, "THE FIX", l=5.8, t=0.3, w=1.7)
+tb(sl13, 1.0, 1.0, 11.333, 0.6, "My bill adds one section to existing law.",
+   sz=26, bold=True, color=TEXT_DARK, font=FONT_SERIF)
+tb(sl13, 1.0, 1.6, 11.333, 0.4, "Three simple requirements.",
+   sz=18, bold=True, color=CA_GOLD)
+for i, (num, title, body) in enumerate([
+    ("01 · Contrast", "4.5:1 contrast ratio",
+     "The same standard accessibility experts already use. Black on white passes automatically — a safe harbor, not a mandate."),
+    ("02 · Clear Field", "Nothing overlapping the date",
+     "No other text, graphic, or logo. The date can't be buried under marketing."),
+    ("03 · Forward-Looking", "Products made after July 2029",
+     "Two years of runway. No company has to throw away packaging they've already printed."),
 ]):
     x = 0.8 + i * 4.1
-    rect(sl13, x, 2.5, 3.6, 3.8, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
-    tb(sl13, x, 2.7, 3.6, 0.5, num, sz=32, bold=True, color=CA_GOLD, align=PP_ALIGN.LEFT)
-    tb(sl13, x + 0.2, 3.4, 3.2, 0.4, title, sz=18, bold=True, color=TEXT_DARK, align=PP_ALIGN.LEFT)
-    tb(sl13, x + 0.2, 4.0, 3.2, 2.0, desc, sz=12, color=MUTED, align=PP_ALIGN.LEFT)
-tb(sl13, 1.0, 6.5, 11.333, 0.6,
+    card(sl13, x, 2.5, 3.6, 3.4, kicker=num, title=title, body=body)
+tb(sl13, 1.0, 6.2, 11.333, 0.6,
    "No new agency. No new paperwork. It folds into existing enforcement — it costs the state essentially nothing.",
-   sz=14, bold=True, color=CA_GOLD)
+   sz=14, italic=True, color=MUTED)
 print("  13/17 The Fix")
 
-# 14 — Safe Harbor
+# 14 — Safe Harbor (KEEP VERBATIM)
 sl14 = prs.slides.add_slide(blank)
 add_bg(sl14)
 rect(sl14, 3.4, 0.4, 6.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
@@ -353,7 +386,7 @@ for i, (ql, qt, ans) in enumerate([
     tb(sl14, x + 0.3, 2.9, 5.1, 2.5, ans, sz=13, color=MUTED, align=PP_ALIGN.LEFT)
 print("  14/17 Safe Harbor")
 
-# 15 — A Proven Path
+# 15 — A Proven Path (KEEP VERBATIM timeline)
 sl15 = prs.slides.add_slide(blank)
 add_bg(sl15)
 rect(sl15, 4.9, 0.5, 3.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
@@ -380,18 +413,19 @@ tb(sl15, 1.0, 5.4, 11.333, 0.8,
    sz=20, bold=True, color=CA_GOLD)
 print("  15/17 Proven Path")
 
-# 16 — Global Precedent
+# 16 — Global Precedent (2 cards)
 sl16 = prs.slides.add_slide(blank)
 add_bg(sl16)
-rect(sl16, 3.4, 0.5, 6.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl16, 3.4, 0.5, 6.5, 0.45, "NOT RADICAL — IT'S NORMAL EVERYWHERE ELSE", sz=11, color=CA_GOLD, bold=True)
-tb_multi(sl16, 1.5, 1.9, 10.333, 1.8, [
-    ("The European Union requires date information to be", {"sz": 20}),
-    ('"clearly legible" and — almost word for word what I\'m proposing —', {"sz": 20}),
-    ('"not hidden, obscured, or interrupted by any other matter."', {"sz": 20}),
-])
-tb(sl16, 1.5, 4.0, 10.333, 0.6, "Canada requires it too.", sz=20, bold=True, color=TEXT_DARK)
-tb(sl16, 1.0, 5.0, 11.333, 0.9,
+badge(sl16, "NOT RADICAL — IT'S NORMAL EVERYWHERE ELSE", l=3.4, t=0.5, w=6.5, sz=11)
+card(sl16, 1.5, 1.8, 5.0, 2.9,
+     kicker="European Union",
+     title="Date information must be “clearly legible”",
+     body="“Not hidden, obscured, or interrupted by any other matter” — almost word for word what I'm proposing.")
+card(sl16, 6.9, 1.8, 5.0, 2.9,
+     kicker="Canada",
+     title="Requires it too",
+     body="A readable date label is already the standard much of the world follows.")
+tb(sl16, 1.0, 5.1, 11.333, 0.9,
    "California led the country on standardizing the words.\nWe can lead on making them readable.",
    sz=20, bold=True, color=CA_GOLD)
 print("  16/17 Global Precedent")
@@ -399,8 +433,7 @@ print("  16/17 Global Precedent")
 # 17 — Closing
 sl17 = prs.slides.add_slide(blank)
 add_bg(sl17)
-rect(sl17, 4.2, 1.2, 4.9, 0.45, border=CA_GOLD, bw=Pt(1.5))
-tb(sl17, 4.2, 1.2, 4.9, 0.45, "PROPOSED LEGISLATION", sz=11, color=CA_GOLD, bold=True)
+badge(sl17, "PROPOSED LEGISLATION", l=4.2, t=1.2, w=4.9)
 tb(sl17, 1.0, 2.0, 11.333, 1.5,
    "The Food Date Label\nLegibility Act", sz=44, bold=True, color=TEXT_DARK, font=FONT_SERIF)
 tb(sl17, 1.0, 4.0, 11.333, 1.0,

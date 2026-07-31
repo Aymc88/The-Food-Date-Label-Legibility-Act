@@ -76,17 +76,18 @@
   .slide > .overlay [data-reveal].visible {
     opacity: 1;
   }
-  .slide-image .overlay .tag,
-  .slide > .overlay .tag,
-  .slide-text .tag {
+
+  /* ── Slide-14 design language: outlined gold tag/badge + tinted cards ── */
+  .tag {
     display: inline-block;
     font-size: 0.8rem; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.1em;
     padding: 0.35rem 0.9rem;
     border-radius: 4px;
     margin-bottom: 0.3rem;
-    background: var(--ca-gold);
-    color: #fff;
+    background: transparent;
+    border: 1px solid var(--ca-gold);
+    color: var(--ca-gold);
   }
 
   .slide-text {
@@ -95,7 +96,7 @@
     text-align: center;
   }
   .slide-text .inner {
-    max-width: 920px;
+    max-width: 980px;
     margin: 0 auto;
   }
   .slide-text .badge {
@@ -103,11 +104,8 @@
     font-size: 0.7rem; font-weight: 600;
     text-transform: uppercase; letter-spacing: 0.15em;
     padding: 0.4rem 1rem;
-    border: 1px solid rgba(0,0,0,0.15);
-  }
-  .slide-text .badge.gold {
+    border: 1px solid var(--ca-gold);
     color: var(--ca-gold);
-    border-color: var(--ca-gold);
     background: transparent;
   }
   .slide-text h1 {
@@ -120,7 +118,7 @@
   .slide-text h1 .highlight { color: var(--ca-gold); }
   .slide-text h2 {
     font-family: 'Source Serif 4', serif;
-    font-size: 2.8rem; font-weight: 700;
+    font-size: 2.6rem; font-weight: 700;
     color: var(--text-dark);
     line-height: 1.2;
     margin-bottom: 1rem;
@@ -138,53 +136,70 @@
     margin: 0 auto;
   }
   .slide-text p.lead {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     color: var(--text-dark);
     font-weight: 500;
   }
   .slide-text p.small { font-size: 1rem; color: rgba(30,30,50,0.6); }
 
-  .requirements { display: flex; gap: 2rem; margin-top: 2rem; text-align: left; }
-  .req-card {
+  /* Cards — the slide-14 pattern */
+  .card-row {
+    display: flex; gap: 1.5rem;
+    margin-top: 2rem; text-align: left;
+    justify-content: center;
+  }
+  .panel-card {
     flex: 1;
-    background: rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(184,134,11,0.08);
+    border: 1px solid rgba(184,134,11,0.2);
     border-radius: 10px;
-    padding: 1.8rem 1.5rem;
+    padding: 1.5rem;
   }
-  .req-card .num {
-    font-size: 2rem; font-weight: 800;
+  .panel-card.danger {
+    background: rgba(196,30,58,0.06);
+    border-color: rgba(196,30,58,0.25);
+  }
+  .panel-card.highlight {
+    background: rgba(184,134,11,0.14);
+    border: 2px solid var(--ca-gold);
+  }
+  .kicker {
+    font-size: 0.85rem; font-weight: 700;
     color: var(--ca-gold);
-    margin-bottom: 0.5rem;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
   }
-  .req-card h4 {
-    font-size: 1.1rem; font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
+  .panel-card.danger .kicker { color: var(--accent-red); }
+  .panel-title {
+    font-size: 1.05rem; font-weight: 700;
+    color: rgba(30,30,50,0.85);
+    line-height: 1.5; margin-bottom: 0.6rem;
   }
-  .req-card p {
-    font-size: 0.85rem; color: rgba(30,30,50,0.7);
-    line-height: 1.5;
+  .panel-body {
+    font-size: 0.9rem;
+    color: rgba(30,30,50,0.7);
+    line-height: 1.55;
   }
+  .panel-body strong { color: var(--text-dark); }
+  .card-num {
+    font-family: 'Source Serif 4', serif;
+    font-size: 3rem; font-weight: 800;
+    color: var(--accent-red);
+    line-height: 1; margin-bottom: 0.5rem;
+  }
+  .card-num.gold { color: var(--ca-gold); }
 
-  .stats-grid { display: flex; gap: 2rem; margin-top: 2rem; justify-content: center; }
-  .stat-card {
-    background: rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.08);
-    border-radius: 12px;
-    padding: 2rem 2.5rem;
-    min-width: 180px;
+  .footer-gold {
+    margin-top: 2rem;
+    font-size: 1.3rem; font-weight: 700;
+    color: var(--ca-gold);
     text-align: center;
   }
-  .stat-card .number {
-    font-size: 3.5rem; font-weight: 800;
-    color: var(--accent-red);
-    line-height: 1;
-  }
-  .stat-card .number.gold { color: var(--ca-gold); }
-  .stat-card .label {
-    font-size: 0.85rem; color: rgba(30,30,50,0.65);
-    margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;
+  .footer-muted {
+    margin-top: 1.75rem;
+    font-size: 1rem; font-style: italic;
+    color: rgba(30,30,50,0.6);
+    text-align: center;
   }
 
   .nav-arrows {
@@ -230,8 +245,7 @@
     .slide-text h1 { font-size: 2.5rem; }
     .slide-text h2 { font-size: 1.8rem; }
     .slide-text p { font-size: 1rem; }
-    .requirements { flex-direction: column; }
-    .stats-grid { flex-wrap: wrap; }
+    .card-row { flex-direction: column; }
     .slide-image .overlay,
     .slide > .overlay { padding: 1.5rem; }
     .slide-image .overlay h2,
@@ -246,7 +260,7 @@
 <!-- SLIDE 1: TITLE -->
 <div class="slide slide-text active" data-notes-index="0">
   <div class="inner">
-    <div class="badge gold">Proposed Legislation</div>
+    <div class="badge">Proposed Legislation</div>
     <h1>The Food Date Label<br>Legibility Act</h1>
     <p class="lead" style="margin-bottom: 2rem; font-size: 1.2rem; color: var(--ca-gold); font-weight: 600; letter-spacing: 0.04em;">
       By Amanda Chen
@@ -326,137 +340,130 @@
 <!-- SLIDE 9: THE BOTTOM LINE -->
 <div class="slide slide-text" data-notes-index="8">
   <div class="inner">
-    <div class="badge gold">The Bottom Line</div>
-    <h2>From just one routine grocery run&hellip;</h2>
-    <div class="stats-grid" style="justify-content: center;">
-      <div class="stat-card">
-        <div class="number">4<span style="font-size: 1.8rem;">/7</span></div>
-        <div class="label">Failure rate &mdash; unreadable dates</div>
+    <div class="badge">The Bottom Line</div>
+    <h2 style="font-size: 2.4rem;">From just one routine grocery run&hellip;</h2>
+    <div class="card-row">
+      <div class="panel-card">
+        <p class="kicker">Failure Rate</p>
+        <p class="card-num">4/7</p>
+        <p class="panel-body">More than half the items I picked up had unreadable dates.</p>
       </div>
-      <div class="stat-card">
-        <div class="number gold">2<span style="font-size: 1.8rem;">/3</span></div>
-        <div class="label">Forced compromise &mdash; not my first choice</div>
+      <div class="panel-card">
+        <p class="kicker">Forced Compromise</p>
+        <p class="card-num gold">2/3</p>
+        <p class="panel-body">Of the 3 things I actually bought, 2 weren&rsquo;t my first choice &mdash; not for price, not for taste, but because the dates were invisible.</p>
       </div>
-      <div class="stat-card">
-        <div class="number">8<span style="font-size: 1.8rem;">/25</span></div>
-        <div class="label">Camera test &mdash; missed in a standard pantry</div>
+      <div class="panel-card">
+        <p class="kicker">Camera Test</p>
+        <p class="card-num">8/25</p>
+        <p class="panel-body">Under optimal lighting, my phone camera almost missed 8 items &mdash; nearly a third of a standard pantry.</p>
       </div>
     </div>
-    <p class="small" style="margin-top: 2rem; max-width: 640px;">
-      Good eyesight. No crowd. No time pressure. Perfect lighting. &mdash; It was still hard to read.
-    </p>
+    <p class="footer-muted">Good eyesight. No crowd. No time pressure. Perfect lighting. &mdash; It was still hard to read.</p>
   </div>
 </div>
 
 <!-- SLIDE 10: THE HUMAN COST -->
 <div class="slide slide-text" data-notes-index="9">
   <div class="inner">
-    <div class="badge gold">The Human Cost</div>
-    <h2>When shoppers can&rsquo;t read a date label,<br>they do one of two things:</h2>
-    <div style="display: flex; gap: 2rem; margin-top: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-      <div style="flex:1; background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.25); border-radius: 10px; padding: 1.5rem; text-align: center; display: flex; align-items: center; justify-content: center;">
-        <p style="font-size: 1.1rem; color: var(--text-dark); font-weight: 600;">Eat food they shouldn&rsquo;t</p>
+    <div class="badge">The Human Cost</div>
+    <h2 style="font-size: 2.2rem;">When shoppers can&rsquo;t read a date label,<br>they do one of two things:</h2>
+    <div class="card-row" style="max-width: 760px; margin-left: auto; margin-right: auto;">
+      <div class="panel-card">
+        <p class="kicker">Less Often</p>
+        <p class="panel-title">Eat food they shouldn&rsquo;t</p>
+        <p class="panel-body">Uncertain whether it&rsquo;s still safe &mdash; they take the chance.</p>
       </div>
-      <div style="flex:1; background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.25); border-radius: 10px; padding: 1.5rem; text-align: center; display: flex; align-items: center; justify-content: center;">
-        <p style="font-size: 1.1rem; color: var(--text-dark); font-weight: 600;">Throw out food that was perfectly fine</p>
+      <div class="panel-card">
+        <p class="kicker">Far More Often</p>
+        <p class="panel-title">Throw out food that was perfectly fine</p>
+        <p class="panel-body">The default when you can&rsquo;t verify the date.</p>
       </div>
     </div>
-    <p style="margin-top: 2rem; font-size: 1.3rem; text-align: center;">
+    <p class="footer-gold">
       <strong>3 billion pounds</strong> of food &middot; <strong>$7 billion</strong> &mdash; every single year.
     </p>
-    <p style="margin-top: 1.25rem; font-size: 1.2rem; color: var(--ca-gold); font-weight: 700;">
-      We fixed the words &mdash; now let&rsquo;s make them readable.
-    </p>
+    <p class="footer-gold" style="font-size: 1.1rem;">We fixed the words &mdash; now let&rsquo;s make them readable.</p>
   </div>
 </div>
 
 <!-- SLIDE 11: THE GAP — AB 660 -->
 <div class="slide slide-text" data-notes-index="10">
   <div class="inner">
-    <div class="badge gold">The Gap</div>
-    <h2>AB 660 fixed <em>what</em> to say.</h2>
-    <h2 style="color: var(--accent-red); font-size: 2.2rem; margin-top: -0.5rem;">It never said make it <em>readable</em>.</h2>
-    <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; max-width: 640px; margin-left: auto; margin-right: auto;">
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
-        <span style="color: rgba(30,30,50,0.7);">Standardized words &mdash; &ldquo;Best if Used by,&rdquo; &ldquo;Use by&rdquo;</span>
-        <span style="color: #2D7D46; font-weight: 600;">&check; AB 660 (2024)</span>
+    <div class="badge">The Gap</div>
+    <h2 style="font-size: 2.3rem;">AB 660 fixed <em>what</em> to say.</h2>
+    <h2 style="color: var(--accent-red); font-size: 1.9rem; margin-top: -0.5rem;">It never said make it <em>readable</em>.</h2>
+    <div class="card-row">
+      <div class="panel-card">
+        <p class="kicker">What AB 660 Did</p>
+        <p class="panel-body" style="line-height: 2;">
+          <strong>Standardized date words</strong> &mdash; &ldquo;Best if Used by,&rdquo; &ldquo;Use by&rdquo;<br>
+          <strong>Banned</strong> the confusing &ldquo;Sell by&rdquo; dates<br>
+          <strong>In effect</strong> July 1, 2026
+        </p>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
-        <span style="color: rgba(30,30,50,0.7);">Confusing &ldquo;Sell by&rdquo; dates</span>
-        <span style="color: #2D7D46; font-weight: 600;">&check; Banned</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(196,30,58,0.06); padding: 0.75rem 1.25rem; border-radius: 6px; border: 1px solid rgba(196,30,58,0.2);">
-        <span style="color: var(--text-dark); font-weight: 600;">Legibility &mdash; can you read it?</span>
-        <span style="color: var(--accent-red); font-weight: 600;">&times; No requirement</span>
+      <div class="panel-card danger">
+        <p class="kicker">What AB 660 Didn&rsquo;t Do</p>
+        <p class="panel-title">Require legibility</p>
+        <p class="panel-body">A company can print the exact right phrase &mdash; in ink the same color as the background, squeezed under the barcode, or stamped over its own logo &mdash; and it&rsquo;s fully legal.</p>
       </div>
     </div>
-    <p style="margin-top: 1.5rem; font-size: 1.2rem; color: rgba(30,30,50,0.7); max-width: 700px;">
-      A company can print the exact right phrase &mdash; in ink the same color as the background,
-      squeezed under the barcode, or stamped over its own logo &mdash; and it&rsquo;s fully legal.
-    </p>
+    <p class="footer-gold" style="font-size: 1.15rem;">The law tells them what to say. It never says make it readable.</p>
   </div>
 </div>
 
 <!-- SLIDE 12: THE ODD ONE OUT -->
 <div class="slide slide-text" data-notes-index="11">
   <div class="inner">
-    <div class="badge gold">The Odd One Out</div>
-    <h2 style="font-size: 2.2rem;">Everything else on the package must be legible.</h2>
-    <div style="margin-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; max-width: 680px; margin-left: auto; margin-right: auto;">
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
-        <span style="color: rgba(30,30,50,0.7);">Nutrition Facts panel</span>
-        <span style="color: #2D7D46; font-weight: 600;">&check; &ldquo;Plainly legible&rdquo; &mdash; federal law</span>
+    <div class="badge">The Odd One Out</div>
+    <h2 style="font-size: 2.2rem;">Everything else on the package<br>must be legible.</h2>
+    <div class="card-row">
+      <div class="panel-card">
+        <p class="kicker">Already Required by Law</p>
+        <p class="panel-body" style="line-height: 2.1;">
+          <strong>Nutrition Facts</strong> &mdash; &ldquo;plainly legible&rdquo; (federal law)<br>
+          <strong>Net quantity statement</strong> &mdash; &ldquo;distinct contrast&rdquo;<br>
+          <strong>Alcohol labels</strong> &mdash; contrast rule
+        </p>
       </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
-        <span style="color: rgba(30,30,50,0.7);">Net quantity statement</span>
-        <span style="color: #2D7D46; font-weight: 600;">&check; &ldquo;Distinct contrast&rdquo;</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.03); padding: 0.75rem 1.25rem; border-radius: 6px;">
-        <span style="color: rgba(30,30,50,0.7);">Alcohol labels</span>
-        <span style="color: #2D7D46; font-weight: 600;">&check; Contrast rule</span>
-      </div>
-      <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(196,30,58,0.06); padding: 0.75rem 1.25rem; border-radius: 6px; border: 1px solid rgba(196,30,58,0.2);">
-        <span style="color: var(--text-dark); font-weight: 600;">The date</span>
-        <span style="color: var(--accent-red); font-weight: 600;">&times; No legibility standard at all</span>
+      <div class="panel-card danger">
+        <p class="kicker">The Date</p>
+        <p class="panel-title">No legibility standard at all</p>
+        <p class="panel-body">The one piece of information that tells you if the food is still safe.</p>
       </div>
     </div>
-    <p style="margin-top: 1.5rem; font-size: 1.2rem; color: var(--ca-gold); font-weight: 600;">
-      The calorie count has to be legible. The net weight has to be legible.<br>
-      The date is the odd one out.
-    </p>
+    <p class="footer-gold">The date is the odd one out.</p>
   </div>
 </div>
 
 <!-- SLIDE 13: THE FIX -->
 <div class="slide slide-text" data-notes-index="12">
   <div class="inner">
-    <div class="badge gold">The Fix</div>
-    <h2 style="font-size: 2.2rem;">My bill adds one section to existing law.</h2>
-    <h3 style="margin-top: 1rem;">Three simple requirements.</h3>
-    <div class="requirements">
-      <div class="req-card">
-        <div class="num">01</div>
-        <h4>Contrast</h4>
-        <p>The date must stand out from its background. A <strong>4.5:1 contrast ratio</strong> &mdash; the same standard accessibility experts already use. Black on white passes automatically: a <strong>safe harbor, not a mandate</strong>.</p>
+    <div class="badge">The Fix</div>
+    <h2 style="font-size: 2.1rem;">My bill adds one section to existing law.</h2>
+    <h3 style="margin-top: 0.5rem;">Three simple requirements.</h3>
+    <div class="card-row">
+      <div class="panel-card">
+        <p class="kicker">01 &middot; Contrast</p>
+        <p class="panel-title">4.5:1 contrast ratio</p>
+        <p class="panel-body">The same standard accessibility experts already use. <strong>Black on white passes automatically</strong> &mdash; a safe harbor, not a mandate.</p>
       </div>
-      <div class="req-card">
-        <div class="num">02</div>
-        <h4>Clear Field</h4>
-        <p>No other text, graphic, or logo overlapping the date. The date can&rsquo;t be buried under marketing.</p>
+      <div class="panel-card">
+        <p class="kicker">02 &middot; Clear Field</p>
+        <p class="panel-title">Nothing overlapping the date</p>
+        <p class="panel-body">No other text, graphic, or logo. The date can&rsquo;t be buried under marketing.</p>
       </div>
-      <div class="req-card">
-        <div class="num">03</div>
-        <h4>Forward-Looking</h4>
-        <p>Only applies to products made after <strong>July 2029</strong>. Two years of runway. No company has to throw away packaging they&rsquo;ve already printed.</p>
+      <div class="panel-card">
+        <p class="kicker">03 &middot; Forward-Looking</p>
+        <p class="panel-title">Products made after July 2029</p>
+        <p class="panel-body">Two years of runway. No company has to throw away packaging they&rsquo;ve already printed.</p>
       </div>
     </div>
-    <p class="small" style="margin-top: 2rem; font-weight: 600; color: rgba(30,30,50,0.7);">
-      No new agency. No new paperwork. It folds into existing enforcement &mdash; it costs the state essentially nothing.
-    </p>
+    <p class="footer-muted" style="font-weight: 600;">No new agency. No new paperwork. It folds into existing enforcement &mdash; it costs the state essentially nothing.</p>
   </div>
 </div>
 
-<!-- SLIDE 14: SAFE HARBOR -->
+<!-- SLIDE 14: SAFE HARBOR — KEEP AS-IS -->
 <div class="slide slide-text" data-notes-index="13">
   <div class="inner">
     <div class="badge" style="border-color: var(--ca-gold); color: var(--ca-gold);">Safe Harbor, Not a Mandate</div>
@@ -475,10 +482,10 @@
   </div>
 </div>
 
-<!-- SLIDE 15: A PROVEN PATH -->
+<!-- SLIDE 15: A PROVEN PATH — KEEP AS-IS -->
 <div class="slide slide-text" data-notes-index="14">
   <div class="inner">
-    <div class="badge gold">A Proven Path</div>
+    <div class="badge">A Proven Path</div>
     <h2 style="font-size: 2.4rem;">California didn&rsquo;t get here in one shot.</h2>
     <div style="display: flex; gap: 1.5rem; margin-top: 2.5rem; justify-content: center; flex-wrap: wrap;">
       <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; padding: 1.25rem 1.5rem; min-width: 150px;">
@@ -507,16 +514,20 @@
 <!-- SLIDE 16: GLOBAL PRECEDENT -->
 <div class="slide slide-text" data-notes-index="15">
   <div class="inner">
-    <div class="badge" style="border-color: var(--ca-gold); color: var(--ca-gold);">Not Radical &mdash; It&rsquo;s Normal Everywhere Else</div>
-    <p class="lead" style="margin-bottom: 1.5rem; margin-top: 1.5rem;">
-      The <strong>European Union</strong> requires date information to be<br>
-      &ldquo;clearly legible&rdquo; and &mdash; almost word for word what I&rsquo;m proposing &mdash;<br>
-      &ldquo;not hidden, obscured, or interrupted by any other matter.&rdquo;
-    </p>
-    <p class="lead" style="margin-bottom: 2rem;">
-      <strong>Canada</strong> requires it too.
-    </p>
-    <p style="font-size: 1.3rem; color: var(--ca-gold); font-weight: 700;">
+    <div class="badge">Not Radical &mdash; It&rsquo;s Normal Everywhere Else</div>
+    <div class="card-row" style="margin-top: 2.5rem; max-width: 800px; margin-left: auto; margin-right: auto;">
+      <div class="panel-card">
+        <p class="kicker">European Union</p>
+        <p class="panel-title">Date information must be &ldquo;clearly legible&rdquo;</p>
+        <p class="panel-body">&ldquo;Not hidden, obscured, or interrupted by any other matter&rdquo; &mdash; almost word for word what I&rsquo;m proposing.</p>
+      </div>
+      <div class="panel-card">
+        <p class="kicker">Canada</p>
+        <p class="panel-title">Requires it too</p>
+        <p class="panel-body">A readable date label is already the standard much of the world follows.</p>
+      </div>
+    </div>
+    <p class="footer-gold" style="font-size: 1.15rem;">
       California led the country on standardizing the words.<br>
       We can lead on making them readable.
     </p>
@@ -526,7 +537,7 @@
 <!-- SLIDE 17: CLOSING -->
 <div class="slide slide-text" data-notes-index="16">
   <div class="inner">
-    <div class="badge gold">Proposed Legislation</div>
+    <div class="badge">Proposed Legislation</div>
     <h1 style="font-size: 3.4rem;">The Food Date Label<br>Legibility Act</h1>
     <p class="lead" style="margin-top: 1rem; font-size: 1.25rem;">
       California already tells food companies what these dates must say.<br>
