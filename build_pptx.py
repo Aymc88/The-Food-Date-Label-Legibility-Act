@@ -314,12 +314,12 @@ rows = [("Nutrition Facts panel", "✓ Legible by law", GREEN),
         ("Net quantity statement", "✓ Distinct contrast required", GREEN),
         ("The date", "✗ No standard at all", ACCENT_RED)]
 for i, (lt, rt, rc) in enumerate(rows):
-    y = 3.4 + i * 0.8
+    y = 3.2 + i * 1.05
     bg_c = RGBColor(0xF5, 0xF3, 0xEE) if i < 2 else RGBColor(0xFD, 0xE8, 0xE8)
     bd_c = RGBColor(0xDD, 0xDD, 0xDD) if i < 2 else RGBColor(0xF0, 0xC0, 0xC0)
-    rect(sl12, 2.5, y, 8.3, 0.65, fill=bg_c, border=bd_c)
-    tb(sl12, 2.8, y, 4.6, 0.65, lt, sz=15, bold=(i == 2), align=PP_ALIGN.LEFT)
-    tb(sl12, 7.4, y, 3.2, 0.65, rt, sz=14, bold=True, color=rc, align=PP_ALIGN.RIGHT)
+    rect(sl12, 2.2, y, 9.0, 0.9, fill=bg_c, border=bd_c)
+    tb(sl12, 2.5, y + 0.15, 4.2, 0.6, lt, sz=15, bold=(i == 2), align=PP_ALIGN.LEFT)
+    tb(sl12, 8.0, y + 0.15, 3.0, 0.6, rt, sz=14, bold=True, color=rc, align=PP_ALIGN.RIGHT)
 print("  12/17 The Gap")
 
 # 13 — The Fix
