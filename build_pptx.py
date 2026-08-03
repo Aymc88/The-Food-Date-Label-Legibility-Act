@@ -375,35 +375,39 @@ rect(sl15, 4.9, 0.5, 3.5, 0.45, border=CA_GOLD, bw=Pt(1.5))
 tb(sl15, 4.9, 0.5, 3.5, 0.45, "A PROVEN PATH", sz=11, color=CA_GOLD, bold=True)
 tb(sl15, 1.0, 1.3, 11.333, 0.8, "California didn't get here in one shot.",
    sz=28, bold=True, color=TEXT_DARK, font=FONT_SERIF)
-for i, (year, label, highlight) in enumerate([
+entries = [
     ("2016", "A bill that failed", False),
     ("2017", "Standard words — voluntary version", False),
     ("2024", "Standard words — AB 660", False),
     ("2027", "Legible dates — the next step", True),
-]):
-    x = 0.7 + i * 3.0
-    if highlight:
-        rect(sl15, x, 3.0, 2.9, 1.4, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(2))
-    else:
-        rect(sl15, x, 3.0, 2.9, 1.4, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
-    box = sl15.shapes.add_textbox(Inches(x + 0.1), Inches(3.05), Inches(2.7), Inches(1.3))
-    tf = box.text_frame
-    tf.word_wrap = False
-    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    p = tf.paragraphs[0]
-    p.alignment = PP_ALIGN.CENTER
-    r1 = p.add_run()
-    r1.text = year + " "
-    r1.font.bold = True
-    r1.font.size = Pt(16)
-    r1.font.color.rgb = CA_GOLD if highlight else ACCENT_RED
-    r1.font.name = FONT_SANS
-    r2 = p.add_run()
-    r2.text = label
-    r2.font.size = Pt(12.5)
-    r2.font.bold = highlight
-    r2.font.color.rgb = TEXT_DARK if highlight else MUTED
-    r2.font.name = FONT_SANS
+]
+for row_i in range(2):
+    for col_i in range(2):
+        year, label, highlight = entries[row_i * 2 + col_i]
+        x = 1.3 + col_i * 5.9
+        y = 2.7 + row_i * 1.9
+        if highlight:
+            rect(sl15, x, y, 5.2, 1.5, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(2))
+        else:
+            rect(sl15, x, y, 5.2, 1.5, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
+        box = sl15.shapes.add_textbox(Inches(x + 0.2), Inches(y + 0.15), Inches(4.8), Inches(1.2))
+        tf = box.text_frame
+        tf.word_wrap = False
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        p = tf.paragraphs[0]
+        p.alignment = PP_ALIGN.CENTER
+        r1 = p.add_run()
+        r1.text = year + " "
+        r1.font.bold = True
+        r1.font.size = Pt(22)
+        r1.font.color.rgb = CA_GOLD if highlight else ACCENT_RED
+        r1.font.name = FONT_SANS
+        r2 = p.add_run()
+        r2.text = label
+        r2.font.size = Pt(16)
+        r2.font.bold = highlight
+        r2.font.color.rgb = TEXT_DARK if highlight else MUTED
+        r2.font.name = FONT_SANS
 print("  15/17 Proven Path")
 
 # 16 — Global Precedent
