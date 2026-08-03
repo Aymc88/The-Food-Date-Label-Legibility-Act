@@ -383,10 +383,10 @@ for i, (year, label, highlight) in enumerate([
 ]):
     x = 0.7 + i * 3.0
     if highlight:
-        rect(sl15, x, 3.0, 2.4, 1.4, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(2))
+        rect(sl15, x, 3.0, 2.9, 1.4, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(2))
     else:
-        rect(sl15, x, 3.0, 2.4, 1.4, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
-    box = sl15.shapes.add_textbox(Inches(x + 0.1), Inches(3.05), Inches(2.2), Inches(1.3))
+        rect(sl15, x, 3.0, 2.9, 1.4, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
+    box = sl15.shapes.add_textbox(Inches(x + 0.1), Inches(3.05), Inches(2.7), Inches(1.3))
     tf = box.text_frame
     tf.word_wrap = False
     tf.vertical_anchor = MSO_ANCHOR.MIDDLE
@@ -395,12 +395,12 @@ for i, (year, label, highlight) in enumerate([
     r1 = p.add_run()
     r1.text = year + " "
     r1.font.bold = True
-    r1.font.size = Pt(13)
+    r1.font.size = Pt(16)
     r1.font.color.rgb = CA_GOLD if highlight else ACCENT_RED
     r1.font.name = FONT_SANS
     r2 = p.add_run()
     r2.text = label
-    r2.font.size = Pt(10)
+    r2.font.size = Pt(12.5)
     r2.font.bold = highlight
     r2.font.color.rgb = TEXT_DARK if highlight else MUTED
     r2.font.name = FONT_SANS
