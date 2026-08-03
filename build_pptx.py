@@ -295,7 +295,17 @@ tb(sl11, 1.0, 1.2, 11.333, 1.0,
 for i, opt in enumerate(["Eat something you shouldn't", "Throw out food that was perfectly fine"]):
     x = 2.0 + i * 5.0
     card(sl11, x, 3.0, 4.2, 1.5, title=None, body=None)
-    tb(sl11, x + 0.3, 3.0, 3.6, 1.5, opt, sz=17, bold=True, color=TEXT_DARK)
+    box = sl11.shapes.add_textbox(Inches(x + 0.3), Inches(3.0), Inches(3.6), Inches(1.5))
+    tf = box.text_frame
+    tf.word_wrap = True
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    p = tf.paragraphs[0]
+    p.text = opt
+    p.font.size = Pt(17)
+    p.font.bold = True
+    p.font.color.rgb = TEXT_DARK
+    p.font.name = FONT_SANS
+    p.alignment = PP_ALIGN.CENTER
 tb_multi(sl11, 2.0, 5.0, 9.333, 1.2, [
     ("3 billion pounds of food · $7 billion", {"sz": 22, "bold": True}),
     ("every single year.", {"sz": 22}),
@@ -367,8 +377,8 @@ tb(sl15, 1.0, 1.3, 11.333, 0.8, "California didn't get here in one shot.",
    sz=28, bold=True, color=TEXT_DARK, font=FONT_SERIF)
 for i, (year, label, highlight) in enumerate([
     ("2016", "A bill that failed", False),
-    ("2017", "Voluntary version", False),
-    ("2024", "AB 660 — standard words", False),
+    ("2017", "Standard words — voluntary version", False),
+    ("2024", "Standard words — AB 660", False),
     ("2029", "Legible dates — the next step", True),
 ]):
     x = 1.2 + i * 2.9
