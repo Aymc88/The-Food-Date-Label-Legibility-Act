@@ -274,10 +274,10 @@ for i, (num, label) in enumerate([
     ("2", "swaps for alternatives"),
 ]):
     x = 2.9 + i * 4.3
-    card(sl9, x, 3.2, 3.5, 2.4, body=None)
-    tb(sl9, x + 0.3, 3.5, 2.9, 1.0, num, sz=64, bold=True,
+    card(sl9, x, 2.2, 3.5, 4.2, body=None)
+    tb(sl9, x + 0.3, 2.4, 2.9, 3.2, num, sz=192, bold=True,
        color=ACCENT_RED, font=FONT_SERIF, align=PP_ALIGN.CENTER)
-    tb(sl9, x + 0.3, 4.7, 2.9, 0.7, label, sz=16, bold=True,
+    tb(sl9, x + 0.3, 5.7, 2.9, 0.7, label, sz=16, bold=True,
        color=ACCENT_RED, align=PP_ALIGN.CENTER)
 print("  9/17 The Results")
 
@@ -379,17 +379,31 @@ for i, (year, label, highlight) in enumerate([
     ("2016", "A bill that failed", False),
     ("2017", "Standard words — voluntary version", False),
     ("2024", "Standard words — AB 660", False),
-    ("2029", "Legible dates — the next step", True),
+    ("2027", "Legible dates — the next step", True),
 ]):
-    x = 1.2 + i * 2.9
+    x = 0.7 + i * 3.0
     if highlight:
-        rect(sl15, x, 2.7, 2.4, 2.2, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(2))
-        tb(sl15, x, 3.0, 2.4, 0.6, year, sz=30, bold=True, color=CA_GOLD)
-        tb(sl15, x + 0.15, 3.7, 2.1, 1.0, label, sz=13, bold=True, color=TEXT_DARK)
+        rect(sl15, x, 3.0, 2.4, 1.4, fill=RGBColor(0xFD, 0xF6, 0xE0), border=GOLD_BORDER, bw=Pt(2))
     else:
-        rect(sl15, x, 2.7, 2.4, 2.2, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
-        tb(sl15, x, 3.0, 2.4, 0.6, year, sz=30, bold=True, color=ACCENT_RED)
-        tb(sl15, x + 0.15, 3.7, 2.1, 1.0, label, sz=13, color=MUTED)
+        rect(sl15, x, 3.0, 2.4, 1.4, fill=CARD_BG, border=RGBColor(0xD0, 0xD0, 0xD0))
+    box = sl15.shapes.add_textbox(Inches(x + 0.1), Inches(3.05), Inches(2.2), Inches(1.3))
+    tf = box.text_frame
+    tf.word_wrap = False
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    p = tf.paragraphs[0]
+    p.alignment = PP_ALIGN.CENTER
+    r1 = p.add_run()
+    r1.text = year + " "
+    r1.font.bold = True
+    r1.font.size = Pt(16)
+    r1.font.color.rgb = CA_GOLD if highlight else ACCENT_RED
+    r1.font.name = FONT_SANS
+    r2 = p.add_run()
+    r2.text = label
+    r2.font.size = Pt(11)
+    r2.font.bold = highlight
+    r2.font.color.rgb = TEXT_DARK if highlight else MUTED
+    r2.font.name = FONT_SANS
 print("  15/17 Proven Path")
 
 # 16 — Global Precedent
