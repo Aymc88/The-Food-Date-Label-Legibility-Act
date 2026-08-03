@@ -277,7 +277,7 @@ for i, (num, label) in enumerate([
     card(sl9, x, 2.2, 3.5, 4.9, body=None)
     tb(sl9, x + 0.3, 2.3, 2.9, 4.0, num, sz=320, bold=True,
        color=ACCENT_RED, font=FONT_SERIF, align=PP_ALIGN.CENTER)
-    tb(sl9, x + 0.3, 6.5, 2.9, 0.5, label, sz=16, bold=True,
+    tb(sl9, x + 0.3, 6.5, 2.9, 0.5, label, sz=18, bold=True,
        color=ACCENT_RED, align=PP_ALIGN.CENTER)
 print("  9/17 The Results")
 
