@@ -274,10 +274,10 @@ for i, (num, label) in enumerate([
     ("2", "swaps for alternatives"),
 ]):
     x = 2.9 + i * 4.3
-    card(sl9, x, 2.2, 3.5, 4.2, body=None)
-    tb(sl9, x + 0.3, 2.4, 2.9, 3.2, num, sz=192, bold=True,
+    card(sl9, x, 2.2, 3.5, 4.9, body=None)
+    tb(sl9, x + 0.3, 2.3, 2.9, 4.0, num, sz=320, bold=True,
        color=ACCENT_RED, font=FONT_SERIF, align=PP_ALIGN.CENTER)
-    tb(sl9, x + 0.3, 5.7, 2.9, 0.7, label, sz=16, bold=True,
+    tb(sl9, x + 0.3, 6.5, 2.9, 0.5, label, sz=16, bold=True,
        color=ACCENT_RED, align=PP_ALIGN.CENTER)
 print("  9/17 The Results")
 
