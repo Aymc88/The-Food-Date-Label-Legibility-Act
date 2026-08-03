@@ -395,12 +395,12 @@ for i, (year, label, highlight) in enumerate([
     r1 = p.add_run()
     r1.text = year + " "
     r1.font.bold = True
-    r1.font.size = Pt(16)
+    r1.font.size = Pt(13)
     r1.font.color.rgb = CA_GOLD if highlight else ACCENT_RED
     r1.font.name = FONT_SANS
     r2 = p.add_run()
     r2.text = label
-    r2.font.size = Pt(11)
+    r2.font.size = Pt(10)
     r2.font.bold = highlight
     r2.font.color.rgb = TEXT_DARK if highlight else MUTED
     r2.font.name = FONT_SANS
